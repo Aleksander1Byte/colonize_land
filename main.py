@@ -3,10 +3,10 @@ import sys
 from generator import generate
 from math import *
 
-WINDOW_SIZE_X = 500
-WINDOW_SIZE_Y = 500
+WINDOW_SIZE_X = 1900
+WINDOW_SIZE_Y = WINDOW_SIZE_X
 FPS = 60
-MAP_SIZE = 25
+MAP_SIZE = 250
 SEED = 100
 
 
@@ -21,14 +21,12 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        draw_map(screen, land, WINDOW_SIZE_X / (MAP_SIZE + MAP_SIZE / 2))
+        draw_map(screen, land, (WINDOW_SIZE_X / MAP_SIZE) / 1.5)
         pygame.display.flip()
     pygame.quit()
 
 
 def draw_map(screen, land, sizeOfcell):
-    sizeOfcell = round(sizeOfcell)
-
     def calculate_point(center, size, i):
         angle_deg = 60 * i + 30
         angle_rad = pi / 180 * angle_deg
@@ -41,9 +39,9 @@ def draw_map(screen, land, sizeOfcell):
     shiftY = 0
     for ind, i in enumerate(land):
         if ind % 2 == 0:
-            shiftX = 0
+            shiftX = 1
         else:
-            shiftX = sqrt(3) / 2 * (sizeOfcell * 2) / 2
+            shiftX = sqrt(3) / 2 * sizeOfcell
         for ind2, j in enumerate(i):
             if j < 0.15:
                 color = colors[0]
