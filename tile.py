@@ -14,21 +14,32 @@ class Tile:
         self.cords = cords
         self.Center = center
         self.borderHardness = 1
+        self.__borderingTiles = list()
         self.__initTile()
 
     def __initTile(self):
         self.borderColor = colors['Border']
         if self.height < 0.15:  # море
-            self.name = 'Sea'
+            self.__type = 'Sea'
         elif self.height < 0.3:  # пустыня
-            self.name = 'Desert'
+            self.__type = 'Desert'
         elif self.height < 0.4:  # пустыня
-            self.name = 'Forest'
+            self.__type = 'Forest'
         elif self.height > 0.95:  # горы
-            self.name = 'Mountains'
+            self.__type = 'Mountains'
         else:  # равнина
-            self.name = 'Plains'
-        self.color = colors[self.name]
+            self.__type = 'Plains'
+        self.color = colors[self.__type]
+
+    def addBorderingTile(self, tile):
+        self.__borderingTiles.append(tile)
+
+    @property
+    def borderingTiles(self):
+        return self.__borderingTiles
+
+    def isBordering(self, tile):
+        return True if tile in self.__borderingTiles else False
 
     def startGlowing(self):
         self.borderColor = colors['Glow']
@@ -38,13 +49,12 @@ class Tile:
         self.borderColor = colors['Border']
         self.borderHardness = 1
 
+    def getType(self):
+        return self.__type
+
     @property
     def position(self):
         return self.color, self.cords
-
-    @property
-    def stats(self):
-        return self.height, self.cords, self.Center
 
     @property
     def coordinates(self):
@@ -52,7 +62,7 @@ class Tile:
 
     @property
     def borders(self):
-        return self.borderColor, False, self.cords, self.borderHardness
+        return self.borderColor, True, self.cords, self.borderHardness
 
     @property
     def center(self):

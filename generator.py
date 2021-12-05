@@ -1,4 +1,6 @@
 import numpy as np
+from math import *
+from tile import Tile
 
 PERCENTAGE_OF_FLOOD = 0.1
 
@@ -22,3 +24,48 @@ def generate(seed, mapSize):
             data[i][j] = 0.0
             data[mapSize - i - 1][j] = 0.0
     return data
+
+
+def create_map(heights, sizeOfcell):
+    def calculate_point(center, size, i):
+        angle_rad = radians(60 * i + 30)
+        return center[0] + size * cos(angle_rad),\
+               center[1] + size * sin(angle_rad)
+
+    shiftY = 10
+    globalMap = list()
+    for ind, i in enumerate(heights):
+        if ind % 2 == 0:
+            shiftX = -2
+        else:
+            shiftX = sizeOfcell * 3/4
+        for ind2, j in enumerate(i):
+            points = list()
+            centerX = ind2 * sizeOfcell + shiftX
+            centerY = ind * sizeOfcell + shiftY
+            for point in range(6):
+                points.append(calculate_point(
+                    [centerX, centerY],
+                    sizeOfcell, point))
+
+            globalMap.append(Tile(j, points, [centerX, centerY]))
+            shiftX += sizeOfcell * 3/4
+        shiftY += sizeOfcell / 2
+
+    mapSize = len(heights)
+    for ind, tile in enumerate(globalMap):
+        try:
+            tile.addBorderingTile(globalMap[ind - 1])
+            tile.addBorderingTile(globalMap[ind + 1])
+            tile.addBorderingTile(globalMap[ind - mapSize])
+            tile.addBorderingTile(globalMap[ind + mapSize])
+            if ind // mapSize % 2:
+                tile.addBorderingTile(globalMap[ind - mapSize + 1])
+                tile.addBorderingTile(globalMap[ind + mapSize + 1])
+            else:
+                tile.addBorderingTile(globalMap[ind - mapSize - 1])
+                tile.addBorderingTile(globalMap[ind + mapSize - 1])
+        except IndexError:
+            pass
+
+    return globalMap
