@@ -5,7 +5,8 @@ colors = {'Sea': pygame.Color('blue'), 'Plains': pygame.Color('green'),
               'Desert': pygame.Color('#fcdd76'),
               'Mountains': pygame.Color('white'),
               'Forest': pygame.Color('#0a5f38'),
-          'Glow': (0, 191, 255), 'Border': (0, 0, 0)}
+          'Selected': (0, 191, 255), 'Border': (0, 0, 0),
+          'From': (255, 0, 0), 'To': (255, 255, 0)}
 
 
 class Tile:
@@ -41,13 +42,16 @@ class Tile:
     def isBordering(self, tile):
         return True if tile in self.__borderingTiles else False
 
-    def startGlowing(self):
-        self.borderColor = colors['Glow']
+    def startGlowing(self, key='Selected'):
+        self.borderColor = colors[key]
         self.borderHardness = 2
 
     def stopGlowing(self):
         self.borderColor = colors['Border']
         self.borderHardness = 1
+
+    def isGlowing(self):
+        return True if self.borderHardness == 2 else False
 
     def getType(self):
         return self.__type

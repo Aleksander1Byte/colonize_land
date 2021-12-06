@@ -36,7 +36,7 @@ def create_map(heights, sizeOfcell):
     globalMap = list()
     for ind, i in enumerate(heights):
         if ind % 2 == 0:
-            shiftX = -2
+            shiftX = -3
         else:
             shiftX = sizeOfcell * 3/4
         for ind2, j in enumerate(i):
@@ -49,8 +49,8 @@ def create_map(heights, sizeOfcell):
                     sizeOfcell, point))
 
             globalMap.append(Tile(j, points, [centerX, centerY]))
-            shiftX += sizeOfcell * 3/4
-        shiftY += sizeOfcell / 2
+            shiftX += sizeOfcell * 3/4 + 0.5
+        shiftY += sizeOfcell / 2 + 0.5
 
     mapSize = len(heights)
     for ind, tile in enumerate(globalMap):

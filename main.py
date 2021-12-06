@@ -20,42 +20,76 @@ def main():
     heights = generate(SEED, MAP_SIZE)  # это должен вводить пользователь
     land = create_map(heights, (WINDOW_SIZE_X / MAP_SIZE) / sqrt(3))
     selectedTile = None
-    tileFrom = None
+
+    glowingTiles = list()
 
     while running:
-        screen.fill(pygame.Color('white'))
+        screen.fill(pygame.Color('black'))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEMOTION:
                 selectedTile = \
                     glow_border(event.pos[0], event.pos[1], land, selectedTile)
+
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == pygame.BUTTON_LEFT:
-                    tileTo = selectedTile
+                    ToFromTileManager('To', selectedTile, glowingTiles)
                     try:
-                        print(tileFrom.isBordering(tileTo))
+                        #  print(tileFrom.isBordering(tileTo))
+                        pass
                     except AttributeError:
-                        tileFrom = selectedTile
+                        ToFromTileManager('From', selectedTile, glowingTiles)
+
                 elif event.button == pygame.BUTTON_RIGHT:
-                    tileFrom = selectedTile
+                    ToFromTileManager('From', selectedTile, glowingTiles)
+
+        for tile in glowingTiles:
+            glow_border(*tile[0].Center, land, key=tile[1])
 
         draw_map(screen, land)
         pygame.display.flip()
     pygame.quit()
 
 
-def glow_border(x, y, land, selectedTile):
-    list_of_difsX = np.array([abs(x - tile.center[0]) for tile in land])
-    list_of_difsY = np.array([abs(y - tile.center[1]) for tile in land])
-    selectedTileIndex = np.argmin(list_of_difsX + list_of_difsY)
-    if selectedTile is None:
-        land[selectedTileIndex].startGlowing()
+def ToFromTileManager(key, selectedTile, glowingTiles):
+    """Принимает key от From до To, добавляет значение в glowingTiles"""
+    for i in glowingTiles:
+        if selectedTile is i[0]:
+            return
+    delGlowingTile(key, glowingTiles)
+    glowingTiles.append([selectedTile, key])
+
+
+def delGlowingTile(key, tiles):
+    for ind, i in enumerate(tiles):
+        if i[1] == key:
+            tiles[ind][0].stopGlowing()
+            del tiles[ind]
+            return
+
+
+def glow_border(x, y, land, PreviousTile=None, key='Selected'):
+    """Подсвечивает границы тайла"""
+    selectedTileIndex = getTileIndex(land, x, y)
+    if PreviousTile is None:
+        land[selectedTileIndex].startGlowing(key)
         return land[selectedTileIndex]
     else:
-        selectedTile.stopGlowing()
-        land[selectedTileIndex].startGlowing()
+        PreviousTile.stopGlowing()
+        land[selectedTileIndex].startGlowing(key)
         return land[selectedTileIndex]
+
+
+def getTile(land, x, y):
+    return land[getTileIndex(land, x, y)]
+
+
+def getTileIndex(land, x, y):
+    """Возвращает индекс тайла в массиве в зависимости от x и y"""
+    list_of_difsX = np.array([abs(x - tile.center[0]) for tile in land])
+    list_of_difsY = np.array([abs(y - tile.center[1]) for tile in land])
+    return np.argmin(list_of_difsX + list_of_difsY)
 
 
 def draw_map(screen, land):
