@@ -3,7 +3,7 @@ import sys
 from generator import generate, create_map
 from math import *
 import numpy as np
-from Exceptions import *
+from player import Player
 
 WINDOW_SIZE_X = 750
 WINDOW_SIZE_Y = WINDOW_SIZE_X
@@ -22,6 +22,7 @@ def main():
     selectedTile = None
 
     glowingTiles = list()
+    players = [Player('Игрок1', (200, 0, 255))]
 
     while running:
         screen.fill(pygame.Color('black'))
@@ -33,10 +34,14 @@ def main():
                     glow_border(event.pos[0], event.pos[1], land, selectedTile)
 
             if event.type == pygame.MOUSEBUTTONDOWN:
+                if isBusy(selectedTile, glowingTiles, players):
+                    break
                 if event.button == pygame.BUTTON_LEFT:
                     ToFromTileManager('To', selectedTile, glowingTiles)
                     try:
-                        print(glowingTiles[0][0].isBordering(glowingTiles[1][0]))
+                        if glowingTiles[0][0].isBordering(glowingTiles[1][0]):
+                            players[0].addTile(glowingTiles[1][0])
+
                     except AttributeError:
                         ToFromTileManager('From', selectedTile, glowingTiles)
                     except IndexError:
@@ -48,6 +53,10 @@ def main():
         for tile in glowingTiles:
             glow_border(*tile[0].Center, land, key=tile[1])
 
+        for player in players:
+            for tile in player.getTiles():
+                glow_border(*tile.Center, land)
+
         draw_map(screen, land)
         pygame.display.flip()
     pygame.quit()
@@ -55,11 +64,18 @@ def main():
 
 def ToFromTileManager(key, selectedTile, glowingTiles):
     """Принимает key от From до To, добавляет значение в glowingTiles"""
-    for i in glowingTiles:
-        if selectedTile is i[0]:
-            return
     delGlowingTile(key, glowingTiles)
     glowingTiles.append([selectedTile, key])
+
+
+def isBusy(selectedTile, glowingTiles, players) -> bool:
+    for i in players:
+        if selectedTile in i.getTiles():
+            return True
+    for i in glowingTiles:
+        if selectedTile is i[0]:
+            return True
+    return False
 
 
 def delGlowingTile(key, tiles):

@@ -15,6 +15,7 @@ class Tile:
         self.cords = cords
         self.Center = center
         self.borderHardness = 1
+        self.occupied = False
         self.__borderingTiles = list()
         self.__initTile()
 
@@ -39,14 +40,24 @@ class Tile:
     def borderingTiles(self):
         return self.__borderingTiles
 
+    def setBorderColor(self, color):
+        self.borderColor = color
+
     def isBordering(self, tile):
         return True if tile in self.__borderingTiles else False
 
-    def startGlowing(self, key='Selected'):
+    def setOccupied(self,  val=True):
+        self.occupied = val
+
+    def startGlowing(self, key='Selected', hardness=2):
+        if key is None or self.occupied:
+            return
+        self.borderHardness = hardness
         self.borderColor = colors[key]
-        self.borderHardness = 2
 
     def stopGlowing(self):
+        if self.occupied:
+            return
         self.borderColor = colors['Border']
         self.borderHardness = 1
 
