@@ -6,9 +6,9 @@ import numpy as np
 from Exceptions import *
 
 WINDOW_SIZE_X = 750
-WINDOW_SIZE_Y = WINDOW_SIZE_X + WINDOW_SIZE_X // 15
+WINDOW_SIZE_Y = WINDOW_SIZE_X
 FPS = 60
-MAP_SIZE = 20
+MAP_SIZE = 25
 SEED = 100
 
 
@@ -36,10 +36,11 @@ def main():
                 if event.button == pygame.BUTTON_LEFT:
                     ToFromTileManager('To', selectedTile, glowingTiles)
                     try:
-                        #  print(tileFrom.isBordering(tileTo))
-                        pass
+                        print(glowingTiles[0][0].isBordering(glowingTiles[1][0]))
                     except AttributeError:
                         ToFromTileManager('From', selectedTile, glowingTiles)
+                    except IndexError:
+                        pass
 
                 elif event.button == pygame.BUTTON_RIGHT:
                     ToFromTileManager('From', selectedTile, glowingTiles)

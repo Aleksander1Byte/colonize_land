@@ -32,7 +32,8 @@ def create_map(heights, sizeOfcell):
         return center[0] + size * cos(angle_rad),\
                center[1] + size * sin(angle_rad)
 
-    shiftY = 10
+    mapSize = len(heights)
+    shiftY = sizeOfcell * 2 + sqrt(mapSize)
     globalMap = list()
     for ind, i in enumerate(heights):
         if ind % 2 == 0:
@@ -52,7 +53,6 @@ def create_map(heights, sizeOfcell):
             shiftX += sizeOfcell * 3/4 + 0.5
         shiftY += sizeOfcell / 2 + 0.5
 
-    mapSize = len(heights)
     for ind, tile in enumerate(globalMap):
         try:
             tile.addBorderingTile(globalMap[ind - 1])
