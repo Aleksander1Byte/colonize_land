@@ -62,7 +62,7 @@ class Tile:
         self.borderHardness = 1
 
     def isGlowing(self):
-        return True if self.borderHardness == 2 else False
+        return True if self.borderHardness != 1 else False
 
     def getType(self):
         return self.__type

@@ -4,6 +4,7 @@ from generator import generate, create_map
 from math import *
 import numpy as np
 from player import Player
+from tileManagment import *
 
 WINDOW_SIZE_X = 750
 WINDOW_SIZE_Y = WINDOW_SIZE_X
@@ -33,6 +34,10 @@ def main():
                 selectedTile = \
                     glow_border(event.pos[0], event.pos[1], land, selectedTile)
 
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    commit(players)
+
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if isBusy(selectedTile, glowingTiles, players):
                     break
@@ -41,6 +46,8 @@ def main():
                     try:
                         if glowingTiles[0][0].isBordering(glowingTiles[1][0]):
                             players[0].addTile(glowingTiles[1][0])
+                        else:
+                            players[0].clearLastSelectedTile()
 
                     except AttributeError:
                         ToFromTileManager('From', selectedTile, glowingTiles)
@@ -62,51 +69,8 @@ def main():
     pygame.quit()
 
 
-def ToFromTileManager(key, selectedTile, glowingTiles):
-    """Принимает key от From до To, добавляет значение в glowingTiles"""
-    delGlowingTile(key, glowingTiles)
-    glowingTiles.append([selectedTile, key])
-
-
-def isBusy(selectedTile, glowingTiles, players) -> bool:
-    for i in players:
-        if selectedTile in i.getTiles():
-            return True
-    for i in glowingTiles:
-        if selectedTile is i[0]:
-            return True
-    return False
-
-
-def delGlowingTile(key, tiles):
-    for ind, i in enumerate(tiles):
-        if i[1] == key:
-            tiles[ind][0].stopGlowing()
-            del tiles[ind]
-            return
-
-
-def glow_border(x, y, land, PreviousTile=None, key='Selected'):
-    """Подсвечивает границы тайла"""
-    selectedTileIndex = getTileIndex(land, x, y)
-    if PreviousTile is None:
-        land[selectedTileIndex].startGlowing(key)
-        return land[selectedTileIndex]
-    else:
-        PreviousTile.stopGlowing()
-        land[selectedTileIndex].startGlowing(key)
-        return land[selectedTileIndex]
-
-
-def getTile(land, x, y):
-    return land[getTileIndex(land, x, y)]
-
-
-def getTileIndex(land, x, y):
-    """Возвращает индекс тайла в массиве в зависимости от x и y"""
-    list_of_difsX = np.array([abs(x - tile.center[0]) for tile in land])
-    list_of_difsY = np.array([abs(y - tile.center[1]) for tile in land])
-    return np.argmin(list_of_difsX + list_of_difsY)
+def commit(players):
+    players[0].commit()
 
 
 def draw_map(screen, land):
