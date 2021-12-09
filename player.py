@@ -4,7 +4,8 @@ class Player:
         self._color = color
         self.startTile = None
         self.temporaryTiles = list()
-        self._tilesBelong = list()
+        self.empireBorders = set()
+        self._tilesBelong = set()
 
     def setupStartingBase(self, tile):
         self.startTile = tile
@@ -33,5 +34,7 @@ class Player:
     def commit(self):
         for tile in self.temporaryTiles:
             tile = self.__colorizeTile(tile)
-            self._tilesBelong.append(tile)
+            self._tilesBelong.add(tile)
+            for i in tile.cords:
+                self.empireBorders.add(i)
         self.temporaryTiles.clear()

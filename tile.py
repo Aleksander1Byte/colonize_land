@@ -16,7 +16,7 @@ class Tile:
         self.Center = center
         self.borderHardness = 1
         self.occupied = False
-        self.__borderingTiles = list()
+        self.__borderingTiles = set()
         self.__initTile()
 
     def __initTile(self):
@@ -34,7 +34,7 @@ class Tile:
         self.color = colors[self.__type]
 
     def addBorderingTile(self, tile):
-        self.__borderingTiles.append(tile)
+        self.__borderingTiles.add(tile)
 
     @property
     def borderingTiles(self):

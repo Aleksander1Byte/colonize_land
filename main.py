@@ -12,6 +12,9 @@ FPS = 60
 MAP_SIZE = 25
 SEED = 100
 
+players = [Player('Игрок1', (200, 0, 255)), Player('Бот1', (255, 0, 0))]
+amountOfPlayers = len(players)
+
 
 def main():
     pygame.init()
@@ -21,10 +24,10 @@ def main():
     heights = generate(SEED, MAP_SIZE)  # это должен вводить пользователь
     land = create_map(heights, (WINDOW_SIZE_X / MAP_SIZE) / sqrt(3))
     selectedTile = None
-
     glowingTiles = list()
-    players = [Player('Игрок1', (200, 0, 255))]
+    step = 0
 
+    print(f'Ход игрока {players[step].name}')
     while running:
         screen.fill(pygame.Color('black'))
         for event in pygame.event.get():
@@ -36,7 +39,8 @@ def main():
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    commit(players)
+                    step = commit(step)
+                    print(f'Ход игрока {players[step].name}')
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if isBusy(selectedTile, glowingTiles, players):
@@ -45,9 +49,9 @@ def main():
                     ToFromTileManager('To', selectedTile, glowingTiles)
                     try:
                         if glowingTiles[0][0].isBordering(glowingTiles[1][0]):
-                            players[0].addTile(glowingTiles[1][0])
+                            players[step].addTile(glowingTiles[1][0])
                         else:
-                            players[0].clearLastSelectedTile()
+                            players[step].clearLastSelectedTile()
 
                     except AttributeError:
                         ToFromTileManager('From', selectedTile, glowingTiles)
@@ -69,8 +73,9 @@ def main():
     pygame.quit()
 
 
-def commit(players):
-    players[0].commit()
+def commit(step):
+    players[step].commit()
+    return (step + 1) % amountOfPlayers
 
 
 def draw_map(screen, land):
