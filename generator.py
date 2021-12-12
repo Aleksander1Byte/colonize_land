@@ -37,9 +37,9 @@ def create_map(heights, sizeOfcell):
     globalMap = list()
     for ind, i in enumerate(heights):
         if ind % 2 == 0:
-            shiftX = -3
+            shiftX = -3 - 15
         else:
-            shiftX = sizeOfcell * 3/4
+            shiftX = sizeOfcell * 3/4 - 15
         for ind2, j in enumerate(i):
             points = list()
             centerX = ind2 * sizeOfcell + shiftX

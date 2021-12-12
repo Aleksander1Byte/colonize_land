@@ -2,17 +2,18 @@ import pygame
 import sys
 from generator import generate, create_map
 from math import *
-import numpy as np
 from player import Player
 from tileManagment import *
+from statistics import Statistics
 
 WINDOW_SIZE_X = 750
-WINDOW_SIZE_Y = WINDOW_SIZE_X
+WINDOW_SIZE_Y = WINDOW_SIZE_X + WINDOW_SIZE_X * 0.15
 FPS = 60
 MAP_SIZE = 25
 SEED = 100
 
-players = [Player('Игрок1', (200, 0, 255)), Player('Бот1', (255, 0, 0))]
+players = [Player('Игрок1', (200, 0, 255)), Player('Бот1', (255, 0, 0)),
+           Player('Бот2', (0, 255, 251))]
 amountOfPlayers = len(players)
 
 
@@ -27,10 +28,12 @@ def main():
     glowingTiles = list()
     step = 0
 
+    statistics = Statistics(WINDOW_SIZE_X, WINDOW_SIZE_Y, players)
     print(f'Ход игрока {players[step].name}')
     while running:
         screen.fill(pygame.Color('black'))
         draw_map(screen, land)
+        statistics.draw(screen)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -66,7 +69,6 @@ def main():
             glow_border(*tile[0].Center, land, key=tile[1])
 
         for player in players:
-            #  print(players[0].treasury)
             for tile in player.getTiles():
                 glow_border(*tile.Center, land)
 
