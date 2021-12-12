@@ -1,5 +1,5 @@
 import pygame
-
+from random import randint
 
 colors = {'Sea': pygame.Color('blue'), 'Plains': pygame.Color('green'),
               'Desert': pygame.Color('#fcdd76'),
@@ -7,6 +7,10 @@ colors = {'Sea': pygame.Color('blue'), 'Plains': pygame.Color('green'),
               'Forest': pygame.Color('#0a5f38'),
           'Selected': (0, 191, 255), 'Border': (0, 0, 0),
           'From': (255, 0, 0), 'To': (255, 255, 0)}
+
+worth = {'Sea': lambda: randint(1, 5), 'Plains': lambda: randint(3, 7),
+         'Desert': lambda: randint(0, 3), 'Mountains': lambda: randint(1, 7),
+         'Forest': lambda: randint(4, 7)}
 
 
 class Tile:
@@ -16,6 +20,8 @@ class Tile:
         self.Center = center
         self.borderHardness = 1
         self.occupied = False
+        self.borderCords = cords[:]
+        self._worth = None
         self.__borderingTiles = set()
         self.__initTile()
 
@@ -31,10 +37,20 @@ class Tile:
             self.__type = 'Mountains'
         else:  # равнина
             self.__type = 'Plains'
+        self._worth = self.__getWorth()
         self.color = colors[self.__type]
+
+    def __getWorth(self):
+        return worth.get(self.__type, 0)()
+
+    def getWorth(self):
+        return self._worth
 
     def addBorderingTile(self, tile):
         self.__borderingTiles.add(tile)
+
+    def setBorderCords(self, cords):
+        self.borderCords = cords
 
     @property
     def borderingTiles(self):
@@ -55,8 +71,8 @@ class Tile:
         self.borderHardness = hardness
         self.borderColor = colors[key]
 
-    def stopGlowing(self):
-        if self.occupied:
+    def stopGlowing(self, forced=False):
+        if self.occupied and not forced:
             return
         self.borderColor = colors['Border']
         self.borderHardness = 1
@@ -77,7 +93,7 @@ class Tile:
 
     @property
     def borders(self):
-        return self.borderColor, True, self.cords, self.borderHardness
+        return self.borderColor, True, self.borderCords, self.borderHardness
 
     @property
     def center(self):

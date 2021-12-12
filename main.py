@@ -30,6 +30,7 @@ def main():
     print(f'Ход игрока {players[step].name}')
     while running:
         screen.fill(pygame.Color('black'))
+        draw_map(screen, land)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -65,10 +66,10 @@ def main():
             glow_border(*tile[0].Center, land, key=tile[1])
 
         for player in players:
+            #  print(players[0].treasury)
             for tile in player.getTiles():
                 glow_border(*tile.Center, land)
 
-        draw_map(screen, land)
         pygame.display.flip()
     pygame.quit()
 

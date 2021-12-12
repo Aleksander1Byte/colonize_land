@@ -1,5 +1,4 @@
 import numpy as np
-from multipledispatch import dispatch
 from tile import Tile
 
 

@@ -4,7 +4,7 @@ class Player:
         self._color = color
         self.startTile = None
         self.temporaryTiles = list()
-        self.empireBorders = set()
+        self.treasury = 0
         self._tilesBelong = set()
 
     def setupStartingBase(self, tile):
@@ -35,6 +35,6 @@ class Player:
         for tile in self.temporaryTiles:
             tile = self.__colorizeTile(tile)
             self._tilesBelong.add(tile)
-            for i in tile.cords:
-                self.empireBorders.add(i)
         self.temporaryTiles.clear()
+        income = sum(list(i.getWorth() for i in self._tilesBelong))
+        self.treasury += income
