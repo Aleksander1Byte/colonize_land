@@ -12,8 +12,7 @@ FPS = 60
 MAP_SIZE = 25
 SEED = 100
 
-players = [Player('Игрок1', (200, 0, 255)), Player('Бот1', (255, 0, 0)),
-           Player('Бот2', (0, 255, 251))]
+players = [Player('Игрок1', (200, 0, 255))]  # Player('Бот1', (255, 0, 0))
 amountOfPlayers = len(players)
 
 
@@ -47,15 +46,25 @@ def main():
                     print(f'Ход игрока {players[step].name}')
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if isBusy(selectedTile, glowingTiles, players):
-                    break
+                empireTiles = players[step].empireBorderingTiles()
                 if event.button == pygame.BUTTON_LEFT:
+                    if selectedTile not in empireTiles and empireTiles:
+                        break
+                    if isBusy(selectedTile, glowingTiles, players):
+                        break
+
                     ToFromTileManager('To', selectedTile, glowingTiles)
                     try:
-                        if glowingTiles[0][0].isBordering(glowingTiles[1][0]):
-                            players[step].addTile(glowingTiles[1][0])
+                        if not empireTiles:
+                            if glowingTiles[0][0].isBordering(glowingTiles[1][0]):
+                                players[step].addTile(glowingTiles[1][0])
+                            else:
+                                players[step].clearLastSelectedTile()
                         else:
-                            players[step].clearLastSelectedTile()
+                            if glowingTiles[1][0] in empireTiles:
+                                players[step].addTile(glowingTiles[1][0])
+                            else:
+                                players[step].clearLastSelectedTile()
 
                     except AttributeError:
                         ToFromTileManager('From', selectedTile, glowingTiles)
@@ -64,7 +73,6 @@ def main():
 
                 elif event.button == pygame.BUTTON_RIGHT:
                     ToFromTileManager('From', selectedTile, glowingTiles)
-
         for tile in glowingTiles:
             glow_border(*tile[0].Center, land, key=tile[1])
 

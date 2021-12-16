@@ -21,6 +21,13 @@ class Player:
     def getTiles(self):
         return self._tilesBelong
 
+    def empireBorderingTiles(self):
+        res = set()
+        for tile in self._tilesBelong:
+            for j in tile.borderingTiles:
+                res.add(j)
+        return res
+
     def clearLastSelectedTile(self):
         for tile in self.temporaryTiles:
             tile.setOccupied(False)
@@ -35,6 +42,8 @@ class Player:
     def commit(self):
         for tile in self.temporaryTiles:
             tile = self.__colorizeTile(tile)
+            if not self._tilesBelong:
+                self.setupStartingBase(tile)
             self._tilesBelong.add(tile)
         self.temporaryTiles.clear()
         self.income = sum(list(i.getWorth() for i in self._tilesBelong))
