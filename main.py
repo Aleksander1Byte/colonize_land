@@ -34,7 +34,7 @@ def main():
     while running:
         screen.fill(pygame.Color('black'))
         draw_map(screen, land)
-        statistics.draw(screen)
+        statistics.draw(screen, step)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -45,7 +45,6 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     step = commit(step)
-                    print(f'Ход игрока {players[step].name}')
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 empireTiles = players[step].empireBorderingTiles()

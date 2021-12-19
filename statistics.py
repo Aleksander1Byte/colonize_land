@@ -7,7 +7,7 @@ class Statistics:
         self.height = WINDOW_SIZE_Y
         self.players = players
 
-    def draw(self, screen):
+    def draw(self, screen, step):
         x = self.width // 15
         y = self.height - self.height * 0.15
         w = self.width - self.width // 7.5
@@ -24,3 +24,7 @@ class Statistics:
             text = font.render(str(line), True, player.getColor())
             screen.blit(text, ((x + 3), (y + 3) + (h // 3) * counter))
             counter += 1
+
+        line = f'Ход игрока {self.players[step].name}'
+        text = font.render(str(line), True, self.players[step].getColor())
+        screen.blit(text, (x + self.width * 0.55, y + 3))
