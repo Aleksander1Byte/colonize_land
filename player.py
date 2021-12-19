@@ -46,8 +46,20 @@ class Player:
                 self.setupStartingBase(tile)
             self._tilesBelong.add(tile)
         self.temporaryTiles.clear()
+
         self.income = sum(list(i.getWorth() for i in self._tilesBelong))
         self.treasury += self.income
+
+    def drawTileWorth(self, screen, sizeOfCell):
+        import pygame
+        font = pygame.font.Font(None, 30)
+        sp = list()
+        for tile in self._tilesBelong:
+            line = str(tile.getWorth())
+            x = tile.center[0] - sizeOfCell // 3
+            y = tile.center[1] - sizeOfCell // 2
+            text = font.render(str(line), True, self.getColor())
+            screen.blit(text, (x, y))
 
     def getColor(self):
         return self._color

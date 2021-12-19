@@ -12,7 +12,8 @@ FPS = 60
 MAP_SIZE = 25
 SEED = 100
 
-players = [Player('Игрок1', (200, 0, 255))]  # Player('Бот1', (255, 0, 0))
+players = [Player('Игрок1', (200, 0, 255)),
+           Player('Бот1', (255, 0, 0))]  # Player('Бот1', (255, 0, 0))
 amountOfPlayers = len(players)
 
 
@@ -22,7 +23,8 @@ def main():
     pygame.display.set_caption('Колонизация')
     running = True
     heights = generate(SEED, MAP_SIZE)  # это должен вводить пользователь
-    land = create_map(heights, (WINDOW_SIZE_X / MAP_SIZE) / sqrt(3))
+    sizeOfCell = (WINDOW_SIZE_X / MAP_SIZE) / sqrt(3)
+    land = create_map(heights, sizeOfCell)
     selectedTile = None
     glowingTiles = list()
     step = 0
@@ -56,7 +58,8 @@ def main():
                     ToFromTileManager('To', selectedTile, glowingTiles)
                     try:
                         if not empireTiles:
-                            if glowingTiles[0][0].isBordering(glowingTiles[1][0]):
+                            if glowingTiles[0][0].isBordering(
+                                    glowingTiles[1][0]):
                                 players[step].addTile(glowingTiles[1][0])
                             else:
                                 players[step].clearLastSelectedTile()
@@ -79,6 +82,8 @@ def main():
         for player in players:
             for tile in player.getTiles():
                 glow_border(*tile.Center, land)
+
+        players[step].drawTileWorth(screen, sizeOfCell)
 
         pygame.display.flip()
     pygame.quit()
