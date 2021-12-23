@@ -1,10 +1,13 @@
 import pygame
 import sys
+import thorpy
+
 from generator import generate, create_map
 from math import *
 from player import Player
 from tileManagment import *
 from statistics import Statistics
+from gameManager import *
 
 WINDOW_SIZE_X = 750
 WINDOW_SIZE_Y = WINDOW_SIZE_X + WINDOW_SIZE_X * 0.15
@@ -27,15 +30,28 @@ def main():
     land = create_map(heights, sizeOfCell)
     selectedTile = None
     glowingTiles = list()
+    startGameFlag = False
     step = 0
 
     statistics = Statistics(WINDOW_SIZE_X, WINDOW_SIZE_Y, players)
     print(f'Ход игрока {players[step].name}')
+
+    menu, box = generateMenu(screen, WINDOW_SIZE_X)
+
+    startGame(screen, WINDOW_SIZE_X)
+
     while running:
-        screen.fill(pygame.Color('black'))
-        draw_map(screen, land)
-        statistics.draw(screen, step)
+        if startGameFlag:
+            screen.fill(pygame.Color('black'))
+            draw_map(screen, land)
+            statistics.draw(screen, step)
+        else:
+            box.blit()
+            box.update()
+
         for event in pygame.event.get():
+            if not startGameFlag:
+                menu.react(event)
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEMOTION:
@@ -45,6 +61,8 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     step = commit(step)
+                if event.key == pygame.K_j:
+                    pass
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 empireTiles = players[step].empireBorderingTiles()
@@ -75,6 +93,7 @@ def main():
 
                 elif event.button == pygame.BUTTON_RIGHT:
                     ToFromTileManager('From', selectedTile, glowingTiles)
+
         for tile in glowingTiles:
             glow_border(*tile[0].Center, land, key=tile[1])
 
@@ -83,7 +102,6 @@ def main():
                 glow_border(*tile.Center, land)
 
         players[step].drawTileWorth(screen, sizeOfCell)
-
         pygame.display.flip()
     pygame.quit()
 
