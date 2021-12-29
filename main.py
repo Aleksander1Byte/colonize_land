@@ -56,6 +56,9 @@ def main():
             if event.type == thorpy.THORPY_EVENT:
                 startGameFlag = True
                 from gameManager import SEED
+                if SEED == '':
+                    from random import randint
+                    SEED = randint(0, 1000)
                 SEED = int(SEED)
                 heights = generate(SEED, MAP_SIZE)
                 sizeOfCell = (WINDOW_SIZE_X / MAP_SIZE) / sqrt(3)
