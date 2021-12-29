@@ -53,7 +53,6 @@ class Player:
     def drawTileWorth(self, screen, sizeOfCell):
         import pygame
         font = pygame.font.Font(None, 30)
-        sp = list()
         for tile in self._tilesBelong:
             line = str(tile.getWorth())
             x = tile.center[0] - sizeOfCell // 3

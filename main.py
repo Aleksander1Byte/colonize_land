@@ -6,6 +6,7 @@ from player import Player
 from tileManagment import *
 from statistics import Statistics
 from gameManager import *
+from bot import Bot
 
 WINDOW_SIZE_X = 750
 WINDOW_SIZE_Y = WINDOW_SIZE_X + WINDOW_SIZE_X * 0.15
@@ -13,8 +14,8 @@ FPS = 60
 MAP_SIZE = 25
 SEED = 100
 
-players = [Player('Игрок1', (200, 0, 255)),
-           Player('Бот1', (122, 122, 255))]  # Player('Бот1', (255, 0, 0))
+players = [Bot('Бот1', (122, 122, 255)),
+           Player('Игрок1', (200, 0, 255))]  # Player('Бот1', (255, 0, 0))
 amountOfPlayers = len(players)
 
 
@@ -54,8 +55,11 @@ def main():
                 menu.react(event)
 
             if event.type == thorpy.THORPY_EVENT:
+                if startGameFlag:
+                    continue
                 startGameFlag = True
                 from gameManager import SEED
+                from random import choice
                 if SEED == '':
                     from random import randint
                     SEED = randint(0, 1000)
@@ -63,6 +67,12 @@ def main():
                 heights = generate(SEED, MAP_SIZE)
                 sizeOfCell = (WINDOW_SIZE_X / MAP_SIZE) / sqrt(3)
                 land = create_map(heights, sizeOfCell)
+                for bot in players:
+                    if isinstance(bot, Bot):
+                        bot.addTile(choice(land))
+                        step = commit(step)
+                glowingTiles.clear()
+
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEMOTION:
@@ -118,6 +128,9 @@ def main():
                 glow_border(*tile.Center, land)
 
         players[step].drawTileWorth(screen, sizeOfCell)
+        if isinstance(players[step], Bot):
+            players[step].turn()
+            step = commit(step)
         pygame.display.flip()
     pygame.quit()
 
