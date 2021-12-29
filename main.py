@@ -15,7 +15,8 @@ MAP_SIZE = 25
 SEED = 100
 
 players = [Bot('Бот1', (122, 122, 255)),
-           Player('Игрок1', (200, 0, 255))]  # Player('Бот1', (255, 0, 0))
+           Bot('Бот2', (200, 0, 255)),
+           Bot('Бот3', (100, 200, 50))]
 amountOfPlayers = len(players)
 
 
@@ -34,7 +35,6 @@ def main():
     step = 0
 
     statistics = Statistics(WINDOW_SIZE_X, WINDOW_SIZE_Y, players)
-    print(f'Ход игрока {players[step].name}')
 
     menu, box = generateMenu(screen, WINDOW_SIZE_X)
 
@@ -69,7 +69,10 @@ def main():
                 land = create_map(heights, sizeOfCell)
                 for bot in players:
                     if isinstance(bot, Bot):
-                        bot.addTile(choice(land))
+                        tile = choice(land)
+                        while tile.getType() == 'Sea':
+                            tile = choice(land)
+                        bot.addTile(tile)
                         step = commit(step)
                 glowingTiles.clear()
 

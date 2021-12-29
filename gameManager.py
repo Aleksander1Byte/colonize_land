@@ -36,14 +36,17 @@ def drawSeed(screen, sizeOfScreen):
 
 
 def endGame(players):
+    from main import MAP_SIZE
     sp = list()
     with open('Statistics.txt', 'w', encoding='utf8') as file:
         for i in players:
             sp.append([i.name, i.treasure])
             file.write(f"{i.name}: \n")
             file.write(f'Накопил {i.treasure} золота\n')
-            file.write(f'Завоевал {len(i.getTiles())} клеток\n\n')
-
+            file.write(f'Завоевал {len(i.getTiles())} клеток\n')
+            file.write(
+                f'Оккупировано {len(i.getTiles()) / (MAP_SIZE ** 2 / 100)}%'
+                f' континента\n\n')
     sp.sort(key=lambda x: x[1], reverse=True)
     print('Финальные результаты:')
     for i in range(len(players)):

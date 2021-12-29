@@ -2,13 +2,13 @@ import pygame
 from random import randint
 
 colors = {'Sea': pygame.Color('blue'), 'Plains': pygame.Color('green'),
-              'Desert': pygame.Color('#fcdd76'),
-              'Mountains': pygame.Color('white'),
-              'Forest': pygame.Color('#0a5f38'),
+          'Desert': pygame.Color('#fcdd76'),
+          'Mountains': pygame.Color('white'),
+          'Forest': pygame.Color('#0a5f38'),
           'Selected': (0, 191, 255), 'Border': (0, 0, 0),
           'From': (255, 0, 0), 'To': (255, 255, 0)}
 
-worth = {'Sea': lambda: randint(1, 5), 'Plains': lambda: randint(3, 7),
+worth = {'Sea': lambda: randint(1, 5), 'Plains': lambda: randint(2, 7),
          'Desert': lambda: randint(0, 3), 'Mountains': lambda: randint(1, 7),
          'Forest': lambda: randint(4, 7)}
 
@@ -62,7 +62,7 @@ class Tile:
     def isBordering(self, tile):
         return True if tile in self.__borderingTiles else False
 
-    def setOccupied(self,  val=True):
+    def setOccupied(self, val=True):
         self.occupied = val
 
     def startGlowing(self, key='Selected', hardness=2):
@@ -98,4 +98,3 @@ class Tile:
     @property
     def center(self):
         return self.Center
-
