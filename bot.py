@@ -17,6 +17,6 @@ class Bot(Player):
                 bestTile = borderingTiles.pop(ind)
                 sp.pop(ind)
                 if bestTile not in self.getTiles() and\
-                        bestTile.occupied == False:
+                        not bestTile.occupied:
                     self.addTile(bestTile)
                     return

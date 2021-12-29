@@ -88,7 +88,7 @@ def main():
                 if event.key == pygame.K_SPACE:
                     step = commit(step)
                 if event.key == pygame.K_j:
-                    pass
+                    endGame(players)
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 empireTiles = players[step].empireBorderingTiles()

@@ -4,7 +4,7 @@ class Player:
         self._color = color
         self.startTile = None
         self.temporaryTiles = list()
-        self.treasury = 0
+        self.treasure = 0
         self.income = 0
         self._tilesBelong = set()
 
@@ -48,7 +48,7 @@ class Player:
         self.temporaryTiles.clear()
 
         self.income = sum(list(i.getWorth() for i in self._tilesBelong))
-        self.treasury += self.income
+        self.treasure += self.income
 
     def drawTileWorth(self, screen, sizeOfCell):
         import pygame

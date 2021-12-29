@@ -19,7 +19,7 @@ class Statistics:
         font = pygame.font.Font(None, 36)
         counter = 0
         for player in self.players:
-            line = f'{player.name}. Золото: {player.treasury};' \
+            line = f'{player.name}. Золото: {player.treasure};' \
                    f' Доход: {player.income}'
             text = font.render(str(line), True, player.getColor())
             screen.blit(text, ((x + 3), (y + 3) + (h // 3) * counter))

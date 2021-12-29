@@ -35,8 +35,19 @@ def drawSeed(screen, sizeOfScreen):
     screen.blit(text, (sizeOfScreen * 0.2, sizeOfScreen * 0.8))
 
 
-def endGame():
-    pass
+def endGame(players):
+    sp = list()
+    with open('Statistics.txt', 'w', encoding='utf8') as file:
+        for i in players:
+            sp.append([i.name, i.treasure])
+            file.write(f"{i.name}: \n")
+            file.write(f'Накопил {i.treasure} золота\n')
+            file.write(f'Завоевал {len(i.getTiles())} клеток\n\n')
+
+    sp.sort(key=lambda x: x[1], reverse=True)
+    print('Финальные результаты:')
+    for i in range(len(players)):
+        print(f'{i + 1} место - {sp[i][0]}, с результатом в {sp[i][1]} золота')
 
 
 def addNumToSeed(num):
