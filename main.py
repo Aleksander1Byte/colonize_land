@@ -8,11 +8,31 @@ from statistics import Statistics
 from gameManager import *
 from bot import Bot
 
-WINDOW_SIZE_X = 750
-WINDOW_SIZE_Y = WINDOW_SIZE_X + WINDOW_SIZE_X * 0.15
-FPS = 60
-MAP_SIZE = 25
+
+def setup():
+    import configparser
+    import os
+    configParser = configparser.RawConfigParser()
+    configFilePath = os.path.join('data/config.cfg')
+    configParser.read(configFilePath)
+    gameWidth = int(configParser.get("window", "Width"))
+    fps = int(configParser.get("window", "FPS"))
+    mapSize = int(configParser.get('gameplay', 'MapSize'))
+
+    global WINDOW_SIZE_X, WINDOW_SIZE_Y, FPS, MAP_SIZE
+    MAP_SIZE = mapSize
+    FPS = fps
+    WINDOW_SIZE_X = gameWidth
+    WINDOW_SIZE_Y = WINDOW_SIZE_X + WINDOW_SIZE_X * 0.15
+
+
+WINDOW_SIZE_X = None
+WINDOW_SIZE_Y = None
+FPS = None
+MAP_SIZE = None
 SEED = 100
+setup()
+
 
 players = [Bot('Бот1', (122, 122, 255)),
            Bot('Бот2', (200, 0, 255)),
