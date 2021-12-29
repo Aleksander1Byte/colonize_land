@@ -3,9 +3,13 @@ import thorpy
 
 
 def generateMenu(screen, sizeOfScreen):
-    exitButton = thorpy.make_button("Выйти из игры", func=thorpy.functions.quit_func)
-    exitButton.set_size((sizeOfScreen * 0.73, sizeOfScreen * 0.07))
-    box = thorpy.Box(elements=[exitButton])
+    startButton = thorpy.make_button("Начать игру",
+                                     func=thorpy.constants.THORPY_EVENT)
+    startButton.set_size((sizeOfScreen * 0.73, sizeOfScreen * 0.07))
+    #  exitButton = thorpy.make_button("Выйти из игры",
+    #                                  func=thorpy.functions.quit_func)
+    #  exitButton.set_size((sizeOfScreen * 0.73, sizeOfScreen * 0.07))
+    box = thorpy.Box(elements=[startButton])
     menu = thorpy.Menu(box)
     for element in menu.get_population():
         element.surface = screen
@@ -14,7 +18,9 @@ def generateMenu(screen, sizeOfScreen):
 
 
 def startGame(screen, sizeOfScreen):
-    pygame.draw.rect(screen, pygame.Color('gray'), (sizeOfScreen * 0.1, sizeOfScreen * 0.1, sizeOfScreen * 0.8, sizeOfScreen * 0.9))
+    pygame.draw.rect(screen, pygame.Color('gray'),
+                     (sizeOfScreen * 0.1, sizeOfScreen * 0.1,
+                      sizeOfScreen * 0.8, sizeOfScreen * 0.9))
 
 
 def endGame():

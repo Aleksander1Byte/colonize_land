@@ -3,7 +3,7 @@ import sys
 import thorpy
 
 from generator import generate, create_map
-from math import *
+from math import sqrt
 from player import Player
 from tileManagment import *
 from statistics import Statistics
@@ -16,7 +16,7 @@ MAP_SIZE = 25
 SEED = 100
 
 players = [Player('Игрок1', (200, 0, 255)),
-           Player('Бот1', (255, 0, 0))]  # Player('Бот1', (255, 0, 0))
+           Player('Бот1', (122, 122, 255))]  # Player('Бот1', (255, 0, 0))
 amountOfPlayers = len(players)
 
 
@@ -52,6 +52,9 @@ def main():
         for event in pygame.event.get():
             if not startGameFlag:
                 menu.react(event)
+
+            if event.type == thorpy.THORPY_EVENT:
+                startGameFlag = True
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEMOTION:
