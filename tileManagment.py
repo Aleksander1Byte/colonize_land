@@ -1,5 +1,4 @@
 import numpy as np
-from tile import Tile
 
 
 def ToFromTileManager(key, selectedTile, glowingTiles):

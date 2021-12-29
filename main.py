@@ -1,6 +1,4 @@
-import pygame
 import sys
-import thorpy
 
 from generator import generate, create_map
 from math import sqrt
@@ -25,7 +23,8 @@ def main():
     screen = pygame.display.set_mode((WINDOW_SIZE_X, WINDOW_SIZE_Y))
     pygame.display.set_caption('Колонизация')
     running = True
-    heights = generate(SEED, MAP_SIZE)  # это должен вводить пользователь
+    SEED = 0
+    heights = generate(SEED, MAP_SIZE)
     sizeOfCell = (WINDOW_SIZE_X / MAP_SIZE) / sqrt(3)
     land = create_map(heights, sizeOfCell)
     selectedTile = None
@@ -46,6 +45,7 @@ def main():
             draw_map(screen, land)
             statistics.draw(screen, step)
         else:
+            drawSeed(screen, WINDOW_SIZE_X)
             box.blit()
             box.update()
 
@@ -55,6 +55,11 @@ def main():
 
             if event.type == thorpy.THORPY_EVENT:
                 startGameFlag = True
+                from gameManager import SEED
+                SEED = int(SEED)
+                heights = generate(SEED, MAP_SIZE)
+                sizeOfCell = (WINDOW_SIZE_X / MAP_SIZE) / sqrt(3)
+                land = create_map(heights, sizeOfCell)
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEMOTION:
@@ -62,6 +67,11 @@ def main():
                     glow_border(event.pos[0], event.pos[1], land, selectedTile)
 
             if event.type == pygame.KEYDOWN:
+                if not startGameFlag:
+                    if pygame.key.name(event.key).isdigit():
+                        addNumToSeed(str(pygame.key.name(event.key)))
+                    elif event.key == pygame.K_BACKSPACE:
+                        delNumFromSeed()
                 if event.key == pygame.K_SPACE:
                     step = commit(step)
                 if event.key == pygame.K_j:
