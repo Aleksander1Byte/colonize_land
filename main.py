@@ -31,6 +31,8 @@ def setupPlayers():
         for _ in range(3):
             try:
                 player = file.readline().rstrip()
+                if not player:
+                    break
                 name = player.split()[0]
                 category = player.split()[1]
                 color = list(map(int, player.split('(')[1][:-1].split(', ')))
@@ -147,7 +149,10 @@ def main():
                             for player in players:
                                 player.getTiles().clear()
                                 step = setupBots(land)
-                            continue
+                            if not isinstance(defineWinners(players)[0][2],
+                                              Bot) or all([isinstance(i, Bot)
+                                                           for i in players]):
+                                continue
                     endGameFlag = True
                     startGameFlag = False
                     endRect = [500, 0]

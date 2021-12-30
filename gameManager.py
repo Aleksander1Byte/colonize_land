@@ -43,6 +43,14 @@ def drawSeed(screen, sizeOfScreen):
     screen.blit(text, (sizeOfScreen * 0.2, sizeOfScreen * 0.8))
 
 
+def defineWinners(players):
+    sp = list()
+    for i in players:
+        sp.append([i.name, i.treasure, i])
+    sp.sort(key=lambda x: x[1], reverse=True)
+    return sp
+
+
 def endGame(players):
     from main import MAP_SIZE
     sp = list()

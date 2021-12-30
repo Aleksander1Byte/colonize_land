@@ -1,5 +1,6 @@
 from generator import generate
-levels = {1: generate(10000, 25), 2: generate(2542, 25, 0.2), 3: generate(1441, 25, 0.3)}
+levels = {1: generate(10000, 25, 0.17), 2: generate(2542, 25, 0.24),
+          3: generate(1441, 25, 0.3)}
 
 
 class Campaign:
