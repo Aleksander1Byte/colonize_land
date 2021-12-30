@@ -88,7 +88,7 @@ def renderFinale(screen, players, sizeOfScreen):
                            sizeOfScreen * 0.2 + 200 * i + 70))
 
 
-def slideEnd(screen, sizeOfScreen, cords, clock, fps):
+def slideEnd(screen, sizeOfScreen, cords, fps):
     if not cords:
         return
     if cords == [500, 0]:
@@ -99,7 +99,6 @@ def slideEnd(screen, sizeOfScreen, cords, clock, fps):
         screen, (0, 0, 0), (cords[0], cords[1], sizeOfScreen + 5,
                             sizeOfScreen + sizeOfScreen * 0.15))
     cords[0] += 500 / fps
-    clock.tick(fps)
     return cords
 
 

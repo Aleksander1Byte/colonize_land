@@ -1,6 +1,6 @@
 import sys
 
-from generator import generate, create_map
+from generator import create_map
 from math import sqrt
 from player import Player
 from tileManagment import *
@@ -42,7 +42,7 @@ def setupPlayers():
                 else:
                     player = Player(name, color)
                 players.append(player)
-            except Exception:
+            except Exception as ex:
                 print('Неправильно заданы игроки')
                 exit()
 
@@ -78,6 +78,7 @@ def main():
     step = 0
 
     statistics = Statistics(WINDOW_SIZE_X, WINDOW_SIZE_Y, players)
+    clock = pygame.time.Clock()
 
     menu, box = generateMenu(screen, WINDOW_SIZE_X)
 
@@ -86,13 +87,12 @@ def main():
     while running:
         if endGameFlag:
             if endRect:
-                endRect = slideEnd(screen, WINDOW_SIZE_X, endRect, clock, FPS)
+                endRect = slideEnd(screen, WINDOW_SIZE_X, endRect, FPS)
             else:
                 screen.fill('black')
             renderFinale(screen, players, WINDOW_SIZE_X)
             all_sprites.draw(screen)
             all_sprites.update()
-            pygame.display.flip()
         elif startGameFlag:
             screen.fill(pygame.Color('black'))
             draw_map(screen, land)
@@ -155,6 +155,8 @@ def main():
                         delNumFromSeed()
                 if event.key == pygame.K_SPACE:
                     step = commit(step)
+                if event.key == pygame.K_n:
+                    players[0].treasure = 10000
                 if event.key == pygame.K_j:
                     endGame(players)
                     if campaign:
@@ -163,6 +165,7 @@ def main():
                             land = create_map(heights, sizeOfCell)
                             for player in players:
                                 player.getTiles().clear()
+                                player.treasure = 0
                                 step = setupBots(land)
                             if not isinstance(defineWinners(players)[0][2],
                                               Bot) or all([isinstance(i, Bot)
@@ -171,15 +174,14 @@ def main():
                     endGameFlag = True
                     startGameFlag = False
                     endRect = [500, 0]
-                    clock = pygame.time.Clock()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if endGameFlag:
                     if event.button == pygame.BUTTON_RIGHT:
                         if secretPlayer is None:
-                            secretPlayer = Player(event)
+                            secretPlayer = SecretPlayer(event)
                         else:
-                            secretPlayer.rect = pygame.Rect(*event.pos, 20, 20)
+                            secretPlayer.rect.x, secretPlayer.rect.y = event.pos
                     if event.button == pygame.BUTTON_LEFT and \
                             pygame.key.get_mods() & pygame.KMOD_CTRL:
                         Border(event, vertical=True)
@@ -215,12 +217,13 @@ def main():
                 elif event.button == pygame.BUTTON_RIGHT:
                     ToFromTileManager('From', selectedTile, glowingTiles)
 
-        for tile in glowingTiles:
-            glow_border(*tile[0].Center, land, key=tile[1])
+        if not endGameFlag:
+            for tile in glowingTiles:
+                glow_border(*tile[0].Center, land, key=tile[1])
 
-        for player in players:
-            for tile in player.getTiles():
-                glow_border(*tile.Center, land)
+            for player in players:
+                for tile in player.getTiles():
+                    glow_border(*tile.Center, land)
 
         if players and not endGameFlag:
             players[step].drawTileWorth(screen, sizeOfCell)
@@ -228,6 +231,7 @@ def main():
                 players[step].turn()
                 step = commit(step)
         pygame.display.flip()
+        clock.tick(FPS)
     pygame.quit()
 
 
