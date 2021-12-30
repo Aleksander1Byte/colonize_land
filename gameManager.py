@@ -72,15 +72,16 @@ def renderFinale(screen, players, sizeOfScreen):
                            sizeOfScreen * 0.2 + 200 * i + 70))
 
 
-def slideEnd(screen, sizeOfScreen, cords):
+def slideEnd(screen, sizeOfScreen, cords, clock, fps):
     if not cords:
         return
     if cords == [500, 0]:
         cords[0] = -sizeOfScreen
     if cords[0] > 0:
         return False
-    pygame.draw.rect(screen, (0, 0, 0), (cords[0], cords[1], sizeOfScreen, sizeOfScreen + sizeOfScreen * 0.15))
-    cords[0] += 3
+    pygame.draw.rect(screen, (0, 0, 0), (cords[0], cords[1], sizeOfScreen + 5, sizeOfScreen + sizeOfScreen * 0.15))
+    cords[0] += 500 / fps
+    clock.tick(fps)
     return cords
 
 

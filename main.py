@@ -9,7 +9,7 @@ from gameManager import *
 from bot import Bot
 
 
-def setup():
+def setupConfig():
     import configparser
     import os
     configParser = configparser.RawConfigParser()
@@ -25,17 +25,34 @@ def setup():
     WINDOW_SIZE_Y = WINDOW_SIZE_X + WINDOW_SIZE_X * 0.15
 
 
+def setupPlayers():
+    with open('data/PLAYERS.txt', 'r', encoding='utf8') as file:
+        for _ in range(3):
+            try:
+                player = file.readline().rstrip()
+                name = player.split()[0]
+                category = player.split()[1]
+                color = list(map(int, player.split('(')[1][:-1].split(', ')))
+                if category == 'bot':
+                    player = Bot(name, color)
+                else:
+                    player = Player(name, color)
+                players.append(player)
+            except Exception:
+                print('Неправильно заданы игроки')
+                exit()
+
+
 WINDOW_SIZE_X: int
 WINDOW_SIZE_Y: int
 FPS: int
 MAP_SIZE: int
 SEED = 100
-setup()
+setupConfig()
 
 
-players = [Bot('Бот1', (122, 122, 255)),
-           Bot('Бот2', (200, 0, 255)),
-           Bot('Бот3', (100, 200, 50))]
+players = list()  #[Bot('Бот1', (122, 122, 255)), Bot('Бот2', (200, 0, 255)), Bot('Бот3', (100, 200, 50))]
+setupPlayers()
 amountOfPlayers = len(players)
 
 
@@ -62,7 +79,10 @@ def main():
 
     while running:
         if endGameFlag:
-            endRect = slideEnd(screen, WINDOW_SIZE_X, endRect)
+            if endRect:
+                endRect = slideEnd(screen, WINDOW_SIZE_X, endRect, clock, FPS)
+            else:
+                screen.fill('black')
             renderFinale(screen, players, WINDOW_SIZE_X)
             pygame.display.flip()
         elif startGameFlag:
@@ -119,6 +139,7 @@ def main():
                     endGameFlag = True
                     startGameFlag = False
                     endRect = [500, 0]
+                    clock = pygame.time.Clock()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if endGameFlag:
