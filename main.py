@@ -8,6 +8,7 @@ from statistics import Statistics
 from gameManager import *
 from bot import Bot
 from campaign import *
+from secret import *
 
 
 def setupConfig():
@@ -73,6 +74,7 @@ def main():
     startGameFlag = False
     endGameFlag = False
     campaign = None
+    secretPlayer = None
     step = 0
 
     statistics = Statistics(WINDOW_SIZE_X, WINDOW_SIZE_Y, players)
@@ -88,6 +90,8 @@ def main():
             else:
                 screen.fill('black')
             renderFinale(screen, players, WINDOW_SIZE_X)
+            all_sprites.draw(screen)
+            all_sprites.update()
             pygame.display.flip()
         elif startGameFlag:
             screen.fill(pygame.Color('black'))
@@ -133,6 +137,17 @@ def main():
                     glow_border(event.pos[0], event.pos[1], land, selectedTile)
 
             if event.type == pygame.KEYDOWN:
+                if endGameFlag:
+                    if event.key == pygame.K_RIGHT:
+                        secretPlayer.move([10, 0])
+                    if event.key == pygame.K_LEFT:
+                        secretPlayer.move([-10, 0])
+                    elif event.key == pygame.K_UP:
+                        if secretPlayer.upDown:
+                            secretPlayer.move([0, -10])
+                    elif event.key == pygame.K_DOWN:
+                        if secretPlayer.upDown:
+                            secretPlayer.move([0, 10])
                 if not startGameFlag:
                     if pygame.key.name(event.key).isdigit():
                         addNumToSeed(str(pygame.key.name(event.key)))
@@ -160,6 +175,16 @@ def main():
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if endGameFlag:
+                    if event.button == pygame.BUTTON_RIGHT:
+                        if secretPlayer is None:
+                            secretPlayer = Player(event)
+                        else:
+                            secretPlayer.rect = pygame.Rect(*event.pos, 20, 20)
+                    if event.button == pygame.BUTTON_LEFT and \
+                            pygame.key.get_mods() & pygame.KMOD_CTRL:
+                        Border(event, vertical=True)
+                    elif event.button == pygame.BUTTON_LEFT:
+                        Border(event)
                     continue
                 empireTiles = players[step].empireBorderingTiles()
                 if event.button == pygame.BUTTON_LEFT:
