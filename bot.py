@@ -9,6 +9,9 @@ class Bot(Player):
         super(Bot, self).__init__(name, color)
 
     def turn(self):
+        from random import randint
+        if not randint(0, 25):
+            return
         borderingTiles = [i for i in self.empireBorderingTiles()]
         sp = [i.getType() for i in borderingTiles]
         for i in tilesToChoose:

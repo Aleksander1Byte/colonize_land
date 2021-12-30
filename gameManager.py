@@ -45,12 +45,43 @@ def endGame(players):
             file.write(f'Накопил {i.treasure} золота\n')
             file.write(f'Завоевал {len(i.getTiles())} клеток\n')
             file.write(
-                f'Оккупировано {len(i.getTiles()) / (MAP_SIZE ** 2 / 100)}%'
-                f' континента\n\n')
+                f'Оккупировано '
+                f'{round(len(i.getTiles()) / ((MAP_SIZE + 1) ** 2 / 100), 2)}%'
+                f' карты\n\n')
     sp.sort(key=lambda x: x[1], reverse=True)
     print('Финальные результаты:')
     for i in range(len(players)):
         print(f'{i + 1} место - {sp[i][0]}, с результатом в {sp[i][1]} золота')
+
+
+def renderFinale(screen, players, sizeOfScreen):
+    sp = list()
+    font = pygame.font.Font(None, 50)
+    for i in players:
+        sp.append([i.name, i.treasure])
+    sp.sort(key=lambda x: x[1], reverse=True)
+    for i in range(len(players)):
+        color = (255, 215, 0) if not i else (197, 201, 199)\
+            if i == 1 else (205, 127, 50) if i == 2 else (255, 255, 255)
+        line = f'{i + 1} место - {sp[i][0]}'
+        text = font.render(line, True, color)
+        screen.blit(text, (sizeOfScreen * 0.05, sizeOfScreen * 0.2 + 200 * i))
+        line = f'{sp[i][1]} золота'
+        text = font.render(line, True, color)
+        screen.blit(text, (sizeOfScreen * 0.05,
+                           sizeOfScreen * 0.2 + 200 * i + 70))
+
+
+def slideEnd(screen, sizeOfScreen, cords):
+    if not cords:
+        return
+    if cords == [500, 0]:
+        cords[0] = -sizeOfScreen
+    if cords[0] > 0:
+        return False
+    pygame.draw.rect(screen, (0, 0, 0), (cords[0], cords[1], sizeOfScreen, sizeOfScreen + sizeOfScreen * 0.15))
+    cords[0] += 3
+    return cords
 
 
 def addNumToSeed(num):

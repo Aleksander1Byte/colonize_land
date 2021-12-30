@@ -18,7 +18,6 @@ def setup():
     gameWidth = int(configParser.get("window", "Width"))
     fps = int(configParser.get("window", "FPS"))
     mapSize = int(configParser.get('gameplay', 'MapSize'))
-
     global WINDOW_SIZE_X, WINDOW_SIZE_Y, FPS, MAP_SIZE
     MAP_SIZE = mapSize
     FPS = fps
@@ -26,10 +25,10 @@ def setup():
     WINDOW_SIZE_Y = WINDOW_SIZE_X + WINDOW_SIZE_X * 0.15
 
 
-WINDOW_SIZE_X = None
-WINDOW_SIZE_Y = None
-FPS = None
-MAP_SIZE = None
+WINDOW_SIZE_X: int
+WINDOW_SIZE_Y: int
+FPS: int
+MAP_SIZE: int
 SEED = 100
 setup()
 
@@ -52,6 +51,7 @@ def main():
     selectedTile = None
     glowingTiles = list()
     startGameFlag = False
+    endGameFlag = False
     step = 0
 
     statistics = Statistics(WINDOW_SIZE_X, WINDOW_SIZE_Y, players)
@@ -61,7 +61,11 @@ def main():
     startGame(screen, WINDOW_SIZE_X)
 
     while running:
-        if startGameFlag:
+        if endGameFlag:
+            endRect = slideEnd(screen, WINDOW_SIZE_X, endRect)
+            renderFinale(screen, players, WINDOW_SIZE_X)
+            pygame.display.flip()
+        elif startGameFlag:
             screen.fill(pygame.Color('black'))
             draw_map(screen, land)
             statistics.draw(screen, step)
@@ -71,7 +75,7 @@ def main():
             box.update()
 
         for event in pygame.event.get():
-            if not startGameFlag:
+            if not startGameFlag and not endGameFlag:
                 menu.react(event)
 
             if event.type == thorpy.THORPY_EVENT:
@@ -90,7 +94,7 @@ def main():
                 for bot in players:
                     if isinstance(bot, Bot):
                         tile = choice(land)
-                        while tile.getType() == 'Sea':
+                        while tile.getType() == 'Sea' or tile.occupied:
                             tile = choice(land)
                         bot.addTile(tile)
                         step = commit(step)
@@ -112,8 +116,13 @@ def main():
                     step = commit(step)
                 if event.key == pygame.K_j:
                     endGame(players)
+                    endGameFlag = True
+                    startGameFlag = False
+                    endRect = [500, 0]
 
             if event.type == pygame.MOUSEBUTTONDOWN:
+                if endGameFlag:
+                    continue
                 empireTiles = players[step].empireBorderingTiles()
                 if event.button == pygame.BUTTON_LEFT:
                     if selectedTile not in empireTiles and empireTiles:
@@ -150,10 +159,11 @@ def main():
             for tile in player.getTiles():
                 glow_border(*tile.Center, land)
 
-        players[step].drawTileWorth(screen, sizeOfCell)
-        if isinstance(players[step], Bot):
-            players[step].turn()
-            step = commit(step)
+        if players and not endGameFlag:
+            players[step].drawTileWorth(screen, sizeOfCell)
+            if isinstance(players[step], Bot):
+                players[step].turn()
+                step = commit(step)
         pygame.display.flip()
     pygame.quit()
 
