@@ -10,7 +10,7 @@ class Bot(Player):
 
     def turn(self):
         from random import randint
-        if not randint(0, 25):
+        if not randint(0, 20):
             return
         borderingTiles = [i for i in self.empireBorderingTiles()]
         sp = [i.getType() for i in borderingTiles]

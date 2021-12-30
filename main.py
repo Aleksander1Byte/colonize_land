@@ -7,6 +7,7 @@ from tileManagment import *
 from statistics import Statistics
 from gameManager import *
 from bot import Bot
+from campaign import *
 
 
 def setupConfig():
@@ -51,7 +52,7 @@ SEED = 100
 setupConfig()
 
 
-players = list()  #[Bot('Бот1', (122, 122, 255)), Bot('Бот2', (200, 0, 255)), Bot('Бот3', (100, 200, 50))]
+players = list()
 setupPlayers()
 amountOfPlayers = len(players)
 
@@ -69,6 +70,7 @@ def main():
     glowingTiles = list()
     startGameFlag = False
     endGameFlag = False
+    campaign = None
     step = 0
 
     statistics = Statistics(WINDOW_SIZE_X, WINDOW_SIZE_Y, players)
@@ -98,7 +100,15 @@ def main():
             if not startGameFlag and not endGameFlag:
                 menu.react(event)
 
-            if event.type == thorpy.THORPY_EVENT:
+            if event == STARTCAMPAIGN:
+                startGameFlag = True
+                campaign = Campaign()
+                sizeOfCell = (WINDOW_SIZE_X / 25) / sqrt(3)
+                land = create_map(campaign.loadLevel(), sizeOfCell)
+                step = setupBots(land)
+                glowingTiles.clear()
+
+            if event == STARTGAME:
                 if startGameFlag:
                     continue
                 startGameFlag = True
@@ -111,13 +121,7 @@ def main():
                 heights = generate(SEED, MAP_SIZE)
                 sizeOfCell = (WINDOW_SIZE_X / MAP_SIZE) / sqrt(3)
                 land = create_map(heights, sizeOfCell)
-                for bot in players:
-                    if isinstance(bot, Bot):
-                        tile = choice(land)
-                        while tile.getType() == 'Sea' or tile.occupied:
-                            tile = choice(land)
-                        bot.addTile(tile)
-                        step = commit(step)
+                step = setupBots(land)
                 glowingTiles.clear()
 
             if event.type == pygame.QUIT:
@@ -136,6 +140,14 @@ def main():
                     step = commit(step)
                 if event.key == pygame.K_j:
                     endGame(players)
+                    if campaign:
+                        heights = campaign.nextLevel()
+                        if heights.any():
+                            land = create_map(heights, sizeOfCell)
+                            for player in players:
+                                player.getTiles().clear()
+                                step = setupBots(land)
+                            continue
                     endGameFlag = True
                     startGameFlag = False
                     endRect = [500, 0]
@@ -187,6 +199,19 @@ def main():
                 step = commit(step)
         pygame.display.flip()
     pygame.quit()
+
+
+def setupBots(land):
+    from random import choice
+    step = 0
+    for bot in players:
+        if isinstance(bot, Bot):
+            tile = choice(land)
+            while tile.getType() == 'Sea' or tile.occupied:
+                tile = choice(land)
+            bot.addTile(tile)
+            step = commit(step)
+    return step
 
 
 def commit(step):

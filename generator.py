@@ -2,10 +2,8 @@ import numpy as np
 from math import *
 from tile import Tile
 
-PERCENTAGE_OF_FLOOD = 0.1
 
-
-def generate(seed, mapSize):
+def generate(seed, mapSize, PERCENTAGE_OF_FLOOD=0.1):
     """Создаётся массив с случайными числами, самые большие
      стремятся к центру массива, от этого генерируется карта, минимум 20% всех
       клеток по бокам будут морем"""
