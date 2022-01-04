@@ -1,5 +1,5 @@
 import os
-import sys
+from imageManager import getAnimations
 
 import pygame
 
@@ -8,33 +8,17 @@ horizontal_borders = pygame.sprite.Group()
 vertical_borders = pygame.sprite.Group()
 
 
-def load_image(name, colorkey=None):
-    fullname = os.path.join('data', name)
-    if not os.path.isfile(fullname):
-        print(f"Файл с изображением '{fullname}' не найден")
-        sys.exit()
-    image = pygame.image.load(fullname)
-    if colorkey is not None:
-        image = image.convert()
-        if colorkey == -1:
-            colorkey = image.get_at((0, 0))
-        image.set_colorkey(colorkey)
-    else:
-        image = image.convert_alpha()
-    return image
-
-
 class SecretPlayer(pygame.sprite.Sprite):
     def __init__(self, event):
         super().__init__(all_sprites)
         self.frames = []
         self.cur_frame = 0
         self.subCur_frame = 0
-        self.idleLFrames = self.openAnim('idle_/')
-        self.idleRFrames = self.openAnim('idle2_/')
-        self.fallFrames = self.openAnim('fall_/')
-        self.runRFrames = self.openAnim('walkLRun_/')
-        self.runLFrames = self.openAnim('walkRRun_/')
+        self.idleLFrames = getAnimations('idle_/')
+        self.idleRFrames = getAnimations('idle2_/')
+        self.fallFrames = getAnimations('fall_/')
+        self.runRFrames = getAnimations('walkLRun_/')
+        self.runLFrames = getAnimations('walkRRun_/')
 
         self.frames = self.idleLFrames
         self.image = self.frames[self.cur_frame]
@@ -45,13 +29,6 @@ class SecretPlayer(pygame.sprite.Sprite):
         self.rect = self.rect.move(*event.pos)
         self.lastMovement = 0
         self.vy = 1.67
-
-    def openAnim(self, path):
-        files = os.listdir('data/' + path)
-        sp = list()
-        for i in range(len(files)):
-            sp.append(load_image(path + files[i], -1))
-        return sp
 
     def cut_sheet(self, sheet, columns, rows):
         self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,

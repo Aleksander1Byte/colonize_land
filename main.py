@@ -84,6 +84,7 @@ def main():
     menu, box = generateMenu(screen, WINDOW_SIZE_X)
 
     startGame(screen, WINDOW_SIZE_X)
+    menuSprite = MenuSprite('menu/', 0, -70)
 
     while running:
         if endGameFlag:
@@ -99,6 +100,8 @@ def main():
             draw_map(screen, land)
             statistics.draw(screen, step)
         else:
+            menuGroup.draw(screen)
+            menuGroup.update()
             drawSeed(screen, WINDOW_SIZE_X)
             box.blit()
             box.update()

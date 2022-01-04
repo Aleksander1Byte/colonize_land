@@ -1,10 +1,30 @@
 import thorpy
 import pygame
+from imageManager import getAnimations
 
 pygame.init()
 font = pygame.font.Font(None, 110)
 STARTGAME = pygame.event.Event(pygame.USEREVENT + 1)
 STARTCAMPAIGN = pygame.event.Event(pygame.USEREVENT + 2)
+menuGroup = pygame.sprite.Group()
+
+
+class MenuSprite(pygame.sprite.Sprite):
+    def __init__(self, path, x=0, y=0):
+        super().__init__(menuGroup)
+        self.frames = getAnimations(path, True)
+        self.frame = 0
+        self.image = self.frames[self.frame]
+        self.rect = pygame.Rect(x, y, self.image.get_width(),
+                                self.image.get_height())
+        self.subCounter = 0
+
+    def update(self):
+        if self.subCounter == 20:
+            self.subCounter = 0
+            self.frame = (self.frame + 1) % len(self.frames)
+            self.image = self.frames[self.frame]
+        self.subCounter += 1
 
 
 def start_Game():
