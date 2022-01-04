@@ -9,6 +9,7 @@ from gameManager import *
 from bot import Bot
 from campaign import *
 from secret import *
+from menu import *
 
 
 def setupConfig():
@@ -157,19 +158,19 @@ def main():
                     step = commit(step)
                 if event.key == pygame.K_n:
                     players[0].treasure = 10000
-                if event.key == pygame.K_j:
+                if event.key == pygame.K_j and startGameFlag:
                     endGame(players)
                     if campaign:
                         heights = campaign.nextLevel()
                         if heights.any():
                             land = create_map(heights, sizeOfCell)
-                            for player in players:
-                                player.getTiles().clear()
-                                player.treasure = 0
-                                step = setupBots(land)
                             if not isinstance(defineWinners(players)[0][2],
                                               Bot) or all([isinstance(i, Bot)
                                                            for i in players]):
+                                for player in players:
+                                    player.getTiles().clear()
+                                    player.treasure = 0
+                                step = setupBots(land)
                                 continue
                     endGameFlag = True
                     startGameFlag = False
@@ -226,10 +227,12 @@ def main():
                     glow_border(*tile.Center, land)
 
         if players and not endGameFlag:
-            players[step].drawTileWorth(screen, sizeOfCell)
             if isinstance(players[step], Bot):
                 players[step].turn()
                 step = commit(step)
+            else:
+                players[step].drawTileWorth(screen, sizeOfCell)
+
         pygame.display.flip()
         clock.tick(FPS)
     pygame.quit()
