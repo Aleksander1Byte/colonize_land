@@ -36,18 +36,19 @@ def start_Campaign():
 
 
 def generateMenu(screen, sizeOfScreen):
+    # http://thorpy.org/examples/image_buttons.html
     startButton = thorpy.make_button("Начать игру", func=start_Game)
-    startButton.set_size((sizeOfScreen * 0.73, sizeOfScreen * 0.07))
+    startButton.set_size((sizeOfScreen * 0.4, sizeOfScreen * 0.07))
 
     campaginButton = thorpy.make_button("Начать кампанию", func=start_Campaign)
-    campaginButton.set_size((sizeOfScreen * 0.73, sizeOfScreen * 0.07))
+    campaginButton.set_size((sizeOfScreen * 0.4, sizeOfScreen * 0.07))
 
     exitButton = thorpy.make_button("Выйти из игры",
                                     func=thorpy.functions.quit_func)
-    exitButton.set_size((sizeOfScreen * 0.73, sizeOfScreen * 0.07))
+    exitButton.set_size((sizeOfScreen * 0.4, sizeOfScreen * 0.07))
     box = thorpy.Box(elements=[startButton, campaginButton, exitButton])
     menu = thorpy.Menu(box)
     for element in menu.get_population():
         element.surface = screen
-        box.set_topleft((sizeOfScreen * 0.12, sizeOfScreen * 0.12))
+        box.set_topleft((sizeOfScreen * 0.57, sizeOfScreen * 0.4))
     return menu, box

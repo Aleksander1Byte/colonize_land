@@ -11,11 +11,12 @@ def startGame(screen, sizeOfScreen):
 
 
 def drawSeed(screen, sizeOfScreen):
-    pygame.draw.rect(screen, pygame.Color('black'),
-                     (sizeOfScreen * 0.2, sizeOfScreen * 0.8,
-                      sizeOfScreen * 0.6, sizeOfScreen * 0.1))
+    if SEED:
+        pygame.draw.rect(screen, pygame.Color('black'),
+                         (sizeOfScreen * 0.57, sizeOfScreen * 0.8,
+                          sizeOfScreen * 0.4, sizeOfScreen * 0.1))
     text = font.render(SEED, False, (100, 255, 100))
-    screen.blit(text, (sizeOfScreen * 0.2, sizeOfScreen * 0.8))
+    screen.blit(text, (sizeOfScreen * 0.58, sizeOfScreen * 0.805))
 
 
 def defineWinners(players):
@@ -79,7 +80,7 @@ def slideEnd(screen, sizeOfScreen, cords, fps):
 
 def addNumToSeed(num):
     global SEED
-    if len(SEED) < 9:
+    if len(SEED) < 6:
         SEED += num
 
 

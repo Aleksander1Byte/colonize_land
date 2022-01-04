@@ -84,7 +84,7 @@ def main():
     menu, box = generateMenu(screen, WINDOW_SIZE_X)
 
     startGame(screen, WINDOW_SIZE_X)
-    menuSprite = MenuSprite('menu/', 0, -70)
+    MenuSprite('menu/', 0, -70)
 
     while running:
         if endGameFlag:
