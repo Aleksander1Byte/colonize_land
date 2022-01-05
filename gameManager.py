@@ -75,6 +75,24 @@ def renderFinale(screen, players, sizeOfScreen):
         text = font.render(line, True, color)
         screen.blit(text, (sizeOfScreen * 0.05,
                            sizeOfScreen * 0.2 + 200 * i + 70))
+    drawFlagsFinale(screen, players, sizeOfScreen)
+
+
+def drawFlagsFinale(screen, players, sizeOfScreen):
+    winnerColor = defineWinners(players)[0][-1].getColor()
+    pygame.draw.rect(screen, '#ffdc33', (
+        0, sizeOfScreen * .01, sizeOfScreen, sizeOfScreen * .08))
+
+    pygame.draw.rect(screen, winnerColor, (
+        0, sizeOfScreen * .025, sizeOfScreen, sizeOfScreen * .05))
+
+    sizeOfScreenY = sizeOfScreen + sizeOfScreen * 0.15
+
+    pygame.draw.rect(screen, '#ffdc33', (
+        0, sizeOfScreenY * .9, sizeOfScreen, sizeOfScreenY * .08))
+
+    pygame.draw.rect(screen, winnerColor, (
+        0, sizeOfScreenY * .915, sizeOfScreen, sizeOfScreenY * .05))
 
 
 def slideEnd(screen, sizeOfScreen, cords, fps):

@@ -88,7 +88,8 @@ def main():
     MenuSprite('menu/background/', 0, -70)
     addSpriteToMenuGroup(
         'menu/title/title.png', WINDOW_SIZE_X * .16, WINDOW_SIZE_Y * .017)
-    addToGameplaySprites('gameplay/scroll.png', -20, 650)
+    addToGameplaySprites(
+        'gameplay/scroll.png', WINDOW_SIZE_X * -.02, WINDOW_SIZE_X * .86)
 
     while running:
         if endGameFlag:
