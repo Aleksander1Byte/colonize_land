@@ -88,6 +88,7 @@ def main():
     MenuSprite('menu/background/', 0, -70)
     addSpriteToMenuGroup(
         'menu/title/title.png', WINDOW_SIZE_X * .16, WINDOW_SIZE_Y * .017)
+    addToGameplaySprites('gameplay/scroll.png', -20, 650)
 
     while running:
         if endGameFlag:
@@ -101,6 +102,7 @@ def main():
         elif startGameFlag:
             screen.fill(pygame.Color('black'))
             draw_map(screen, land)
+            gameplaySprites.draw(screen)
             statistics.draw(screen, step)
         else:
             menuGroup.draw(screen)
@@ -162,7 +164,8 @@ def main():
                         delNumFromSeed()
                 if event.key == pygame.K_SPACE:
                     step = commit(step)
-                if event.key == pygame.K_n:
+                if event.key == pygame.K_n and pygame.key.get_mods()\
+                        & pygame.KMOD_CTRL:
                     players[0].treasure = 10000
                 if event.key == pygame.K_j and startGameFlag:
                     endGame(players)
@@ -188,7 +191,8 @@ def main():
                         if secretPlayer is None:
                             secretPlayer = SecretPlayer(event)
                         else:
-                            secretPlayer.rect.x, secretPlayer.rect.y = event.pos
+                            secretPlayer.rect.x, secretPlayer.rect.y =\
+                                event.pos
                     if event.button == pygame.BUTTON_LEFT and \
                             pygame.key.get_mods() & pygame.KMOD_CTRL:
                         Border(event, vertical=True)

@@ -2,6 +2,7 @@ import pygame
 from menu import font
 
 SEED = ''
+gameplaySprites = pygame.sprite.Group()
 
 
 def startGame(screen, sizeOfScreen):
@@ -17,6 +18,18 @@ def drawSeed(screen, sizeOfScreen):
                           sizeOfScreen * 0.4, sizeOfScreen * 0.1))
     text = font.render(SEED, False, (100, 255, 100))
     screen.blit(text, (sizeOfScreen * 0.58, sizeOfScreen * 0.805))
+
+
+def addToGameplaySprites(image, x, y, xSize=None, ySize=None, colorkey=None):
+    from imageManager import load_image
+    sprite = pygame.sprite.Sprite(gameplaySprites)
+    image = load_image(image, colorkey)
+    if xSize and ySize:
+        image = pygame.transform.scale(image, (xSize, ySize))
+    sprite.image = image
+    sprite.rect = sprite.image.get_rect()
+    sprite.rect.x = x
+    sprite.rect.y = y
 
 
 def defineWinners(players):
