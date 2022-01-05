@@ -76,6 +76,7 @@ def main():
     endGameFlag = False
     campaign = None
     secretPlayer = None
+    endRect = None
     step = 0
 
     statistics = Statistics(WINDOW_SIZE_X, WINDOW_SIZE_Y, players)
@@ -84,7 +85,9 @@ def main():
     menu, box = generateMenu(screen, WINDOW_SIZE_X)
 
     startGame(screen, WINDOW_SIZE_X)
-    MenuSprite('menu/', 0, -70)
+    MenuSprite('menu/background/', 0, -70)
+    addSpriteToMenuGroup(
+        'menu/title/title.png', WINDOW_SIZE_X * .16, WINDOW_SIZE_Y * .017)
 
     while running:
         if endGameFlag:

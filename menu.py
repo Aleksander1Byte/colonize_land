@@ -1,6 +1,6 @@
 import thorpy
 import pygame
-from imageManager import getAnimations
+from imageManager import getAnimations, load_image
 
 pygame.init()
 font = pygame.font.Font(None, 110)
@@ -25,6 +25,15 @@ class MenuSprite(pygame.sprite.Sprite):
             self.frame = (self.frame + 1) % len(self.frames)
             self.image = self.frames[self.frame]
         self.subCounter += 1
+
+
+def addSpriteToMenuGroup(image, x, y, alpha=None):
+    sprite = pygame.sprite.Sprite(menuGroup)
+    image = load_image(image, alpha)
+    sprite.image = image
+    sprite.rect = sprite.image.get_rect()
+    sprite.rect.x = x
+    sprite.rect.y = y
 
 
 def start_Game():
