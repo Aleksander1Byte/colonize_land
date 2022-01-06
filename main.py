@@ -89,7 +89,7 @@ def main():
     addSpriteToMenuGroup(
         'menu/title/title.png', WINDOW_SIZE_X * .16, WINDOW_SIZE_Y * .017)
     addToGameplaySprites(
-        'gameplay/scroll.png', WINDOW_SIZE_X * -.02, WINDOW_SIZE_X * .86)
+        'gameplay/scroll.png', WINDOW_SIZE_X * -.025, WINDOW_SIZE_X * .86)
 
     while running:
         if endGameFlag:
@@ -163,7 +163,7 @@ def main():
                         addNumToSeed(str(pygame.key.name(event.key)))
                     elif event.key == pygame.K_BACKSPACE:
                         delNumFromSeed()
-                if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_SPACE and startGameFlag:
                     step = commit(step)
                 if event.key == pygame.K_n and pygame.key.get_mods()\
                         & pygame.KMOD_CTRL:
