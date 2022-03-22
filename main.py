@@ -55,7 +55,6 @@ MAP_SIZE: int
 SEED = 100
 setupConfig()
 
-
 players = list()
 setupPlayers()
 amountOfPlayers = len(players)
@@ -145,6 +144,23 @@ def main():
             if event.type == pygame.MOUSEMOTION:
                 selectedTile = \
                     glow_border(event.pos[0], event.pos[1], land, selectedTile)
+            if all(list(map(lambda x: x.occupied, land))) and startGameFlag:
+                endGameConclusion(players)
+                if campaign:
+                    heights = campaign.nextLevel()
+                    if heights.any():
+                        land = create_map(heights, sizeOfCell)
+                        if not isinstance(defineWinners(players)[0][2],
+                                          Bot) or all([isinstance(i, Bot)
+                                                       for i in players]):
+                            for player in players:
+                                player.getTiles().clear()
+                                player.treasure = 0
+                            step = setupBots(land)
+                            continue
+                endGameFlag = True
+                startGameFlag = False
+                endRect = [500, 0]
 
             if event.type == pygame.KEYDOWN:
                 if endGameFlag:
@@ -165,11 +181,11 @@ def main():
                         delNumFromSeed()
                 if event.key == pygame.K_SPACE and startGameFlag:
                     step = commit(step)
-                if event.key == pygame.K_n and pygame.key.get_mods()\
+                if event.key == pygame.K_n and pygame.key.get_mods() \
                         & pygame.KMOD_CTRL:
                     players[0].treasure = 10000
                 if event.key == pygame.K_j and startGameFlag:
-                    endGame(players)
+                    endGameConclusion(players)
                     if campaign:
                         heights = campaign.nextLevel()
                         if heights.any():
@@ -192,7 +208,7 @@ def main():
                         if secretPlayer is None:
                             secretPlayer = SecretPlayer(event)
                         else:
-                            secretPlayer.rect.x, secretPlayer.rect.y =\
+                            secretPlayer.rect.x, secretPlayer.rect.y = \
                                 event.pos
                     if event.button == pygame.BUTTON_LEFT and \
                             pygame.key.get_mods() & pygame.KMOD_CTRL:

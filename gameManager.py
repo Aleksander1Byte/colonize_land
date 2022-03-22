@@ -40,7 +40,7 @@ def defineWinners(players):
     return sp
 
 
-def endGame(players):
+def endGameConclusion(players):
     from main import MAP_SIZE
     sp = list()
     with open('Statistics.txt', 'w', encoding='utf8') as file:
