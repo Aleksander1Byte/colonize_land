@@ -55,6 +55,7 @@ MAP_SIZE: int
 SEED = 100
 setupConfig()
 
+
 players = list()
 setupPlayers()
 amountOfPlayers = len(players)
@@ -144,7 +145,7 @@ def main():
             if event.type == pygame.MOUSEMOTION:
                 selectedTile = \
                     glow_border(event.pos[0], event.pos[1], land, selectedTile)
-            if all(list(map(lambda x: x.occupied, land))) and startGameFlag:
+            if is_all_tiles_colonized(land) and startGameFlag:
                 endGameConclusion(players)
                 if campaign:
                     heights = campaign.nextLevel()
@@ -181,7 +182,7 @@ def main():
                         delNumFromSeed()
                 if event.key == pygame.K_SPACE and startGameFlag:
                     step = commit(step)
-                if event.key == pygame.K_n and pygame.key.get_mods() \
+                if event.key == pygame.K_n and pygame.key.get_mods()\
                         & pygame.KMOD_CTRL:
                     players[0].treasure = 10000
                 if event.key == pygame.K_j and startGameFlag:
@@ -208,7 +209,7 @@ def main():
                         if secretPlayer is None:
                             secretPlayer = SecretPlayer(event)
                         else:
-                            secretPlayer.rect.x, secretPlayer.rect.y = \
+                            secretPlayer.rect.x, secretPlayer.rect.y =\
                                 event.pos
                     if event.button == pygame.BUTTON_LEFT and \
                             pygame.key.get_mods() & pygame.KMOD_CTRL:
@@ -263,6 +264,13 @@ def main():
         pygame.display.flip()
         clock.tick(FPS)
     pygame.quit()
+
+
+def is_all_tiles_colonized(land):
+    for tile in land:
+        if tile.occupied:
+            return False
+    return True
 
 
 def setupBots(land):
