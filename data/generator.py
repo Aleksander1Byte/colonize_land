@@ -1,6 +1,6 @@
 import numpy as np
 from math import *
-from tile import Tile
+from data.tile import Tile
 
 
 def generate(seed, mapSize, PERCENTAGE_OF_FLOOD=0.1):

@@ -1,15 +1,15 @@
 import sys
 
-from generator import create_map
+from data.generator import create_map
 from math import sqrt
-from player import Player
-from tileManagment import *
-from statistics import Statistics
-from gameManager import *
-from bot import Bot
-from campaign import *
-from secret import *
-from menu import *
+from data.player import Player
+from data.tileManagment import *
+from data.statistics import Statistics
+from data.gameManager import *
+from data.bot import Bot
+from data.campaign import *
+from data.secret import *
+from data.menu import *
 
 
 def setupConfig():
@@ -128,7 +128,7 @@ def main():
                 if startGameFlag:
                     continue
                 startGameFlag = True
-                from gameManager import SEED
+                from data.gameManager import SEED
                 from random import choice
                 if SEED == '':
                     from random import randint

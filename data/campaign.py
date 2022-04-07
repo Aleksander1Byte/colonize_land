@@ -1,4 +1,4 @@
-from generator import generate
+from data.generator import generate
 levels = {1: generate(10000, 25, 0.17), 2: generate(2542, 25, 0.24),
           3: generate(1441, 25, 0.3)}
 

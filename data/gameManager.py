@@ -1,5 +1,5 @@
 import pygame
-from menu import font
+from data.menu import font
 
 SEED = ''
 gameplaySprites = pygame.sprite.Group()
@@ -21,7 +21,7 @@ def drawSeed(screen, sizeOfScreen):
 
 
 def addToGameplaySprites(image, x, y, xSize=None, ySize=None, colorkey=None):
-    from imageManager import load_image
+    from data.imageManager import load_image
     sprite = pygame.sprite.Sprite(gameplaySprites)
     image = load_image(image, colorkey)
     if xSize and ySize:

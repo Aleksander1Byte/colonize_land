@@ -1,5 +1,5 @@
 import os
-from imageManager import getAnimations
+from data.imageManager import getAnimations
 
 import pygame
 

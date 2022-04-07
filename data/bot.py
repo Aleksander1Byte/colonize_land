@@ -1,4 +1,4 @@
-from player import Player
+from data.player import Player
 
 
 tilesToChoose = ['Forest', 'Plains', 'Mountains', 'Sea', 'Desert']

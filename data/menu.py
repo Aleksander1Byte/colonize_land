@@ -1,6 +1,6 @@
 import thorpy
 import pygame
-from imageManager import getAnimations, load_image
+from data.imageManager import getAnimations, load_image
 
 pygame.init()
 font = pygame.font.Font(None, 110)
